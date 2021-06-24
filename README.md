@@ -23,13 +23,14 @@ Why not? We're always looking for developers to help out with the project! Altho
 # Can I join the BukkitPE community?
 Currently, we don't have any forums for now.
 
-## Quick Links
+## Quick Links Only Discord Server Available
 
 * __[Homepage](N/A)__
 * __[Forums](N/A)__
 * __[Documentation](N/A)__
 * __[Plugin Repository](N/A)__
 * __[Jenkins](N/A)__
+* __[Discord](https://discord.gg/UbrUkYs7uB)__
 
 ## TODO
 
