@@ -1,0 +1,100 @@
+# Erweiterte Konfigurationsdatei für BukkitPE
+# Einige dieser Einstellungen sind sicher, andere können Ihren Server zerstören, wenn sie falsch geändert werden.
+# Neue Einstellungen/Standardwerte werden bei einem Upgrade nicht automatisch in diese Datei übernommen.
+
+Einstellungen:
+  #Multi-language setting
+  #Verfügbar: eng, chs, cht, jpn, rus, spa, pol, bra, kor
+  Sprache: "eng"
+  #Ob alle Strings übersetzt an das Servergebietsschema gesendet werden sollen oder ob das Gerät sie verarbeiten soll
+  force-language: false
+  shutdown-message: "Der Server ist geschlossen"
+  #Zulassen, dass Plugins über Query aufgelistet werden
+  query-plugins: true
+  #Eine Konsolenmeldung anzeigen, wenn ein Plugin veraltete API-Methoden verwendet
+  deprecated-verbose: true
+  #Anzahl der AsyncTask-Worker
+  #Wenn auf auto gesetzt, wird versucht, die Anzahl der Kerne zu ermitteln (und mindestens 4)
+  async-worker: auto
+
+network:
+  #Schwellenwert für das Stapeln von Paketen, in Bytes. Nur diese Pakete werden komprimiert
+  #Setzen Sie den Wert auf 0, um alles zu komprimieren, -1 zum Deaktivieren.
+  batch-threshold: 256
+  #Komprimierungsstufe, die von Zlib beim Senden von Batch-Paketen verwendet wird. Höher = mehr CPU, weniger Bandbreitennutzung
+  Komprimierungsstufe: 7
+  #Verwendet AsyncTasks für die Komprimierung. Fügt eine halbe/ein Tick Verzögerung hinzu, weniger CPU-Last auf dem Haupt-Thread
+  async-Komprimierung: falsch
+
+debug:
+  #Wenn > 1, werden Debug-Meldungen in der Konsole angezeigt
+  level: 1
+  #Aktiviert Befehle: /status /gc
+  Befehle: false
+
+level-einstellungen:
+  #Das Standardformat, das Levels beim Erstellen verwenden werden
+  default-format: mcregion
+  #Automatische Änderung der Tickrate der Levels, um 20 Ticks pro Sekunde zu erhalten
+  auto-tick-rate: wahr
+  auto-tick-rate-limit: 20
+  #Setzt die Basis-Tickrate (1 = 20 Ticks pro Sekunde, 2 = 10 Ticks pro Sekunde usw.)
+  base-tick-rate: 1
+  #Tick alle Spieler bei jedem Tick, auch wenn andere Einstellungen dies nicht zulassen.
+  Immer-Tick-Spieler: false
+
+chunk-sending:
+  #Menge der Chunks, die pro Tick an die Spieler gesendet werden
+  pro-Tick: 4
+  #Anzahl der Chunks, die um jeden Spieler herum gesendet werden
+  max-chunks: 192
+  #Anzahl der Chunks, die vor dem Spawnen des Spielers gesendet werden müssen.
+  spawn-threshold: 56
+  #Speichern einer serialisierten Kopie des Chunks im Speicher zum schnelleren Senden
+  #Nützlich in meist statischen Welten, in denen viele Spieler gleichzeitig beitreten
+  cache-chunks: false
+
+chunk-ticking:
+  #Max. Anzahl von Chunks, die pro Tick verarbeitet werden
+  pro-Tick: 40
+  #Radius der zu tickenden Chunks um einen Spieler
+  tick-radius: 3
+  light-updates: false
+  clear-tick-list: false
+
+chunk-generation:
+  #Max. zu erzeugende Anzahl von Chunks in der Warteschlange
+  warteschlangen-größe: 8
+  #Max. Anzahl von Chunks in der Warteschlange, die befüllt werden sollen
+  population-queue-size: 8
+
+ticks-per:
+  Tier-Spawns: 400
+  monster-spawns: 1
+  autosave: 6000
+  cache-cleanup: 900
+
+spawn-limits:
+  #Max. Anzahl dieser Entitäten
+  Monster: 70
+  Tiere: 15
+  Wasser-Tiere: 5
+  Umgebung: 15
+
+Aliasen:
+  #Aliases für Befehle
+  #Beispiele:
+  #showtheversion: version
+  #savestop: [save-all, stop]
+
+Welten:
+  #Diese Einstellungen überschreiben den in server.properties eingestellten Generator und erlauben das Laden mehrerer Ebenen
+  #Beispiel:
+  #world:
+  # seed: 404
+  # generator: FLAT:2;7,59x1,3x3,2;1;decoration(treecount=80 grasscount=45)
+ 
+ 
+  # Wenn Sie BungeeCordPE verwenden wollen, setzen Sie dies auf true
+  # Diese Option ermöglicht es Spielern, ihre eigenen IP-Adressen beizubehalten.
+BungeeCordPE: false
