@@ -1,4 +1,4 @@
-[![Download via Jenkins](https://bukkitpe.net/BukkitPE.png)](https://BukkitPE.net)
+[![Download via Jenkins](https://bukkitpe.net/BukkitPE.png)](website link)
 
 
 # What is this?
@@ -10,7 +10,7 @@ BukkitPE is software for hosting Minecraft : Pocket Edition servers. From contro
 # Statistics
 
 *TravisCI Build Status*
-      [![Build Status](https://travis-ci.org/BukkitPE/BukkitPE.svg?branch=master)](https://travis-ci.org/BukkitPE/BukkitPE)
+      [![Build Status](N/A)
       
 *Gitter Chat Status*
     [![Glitter](https://badges.gitter.im/BukkitPE/BukkitPE.svg)](https://gitter.im/BukkitPE/BukkitPE?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -25,8 +25,8 @@ Currently, we don't have any forums for now.
 
 ## Quick Links
 
-* __[Homepage](https://bukkitpe.net/)__
-* __[Forums](http://forums.bukkitpe.net/)__
-* __[Documentation](https://github.com/BukkitPE/Documentation)__
-* __[Plugin Repository](https://forums.bukkitpe.net/index.php?plugins/)__
-* __[Jenkins](http://Jenkins.BukkitPE.net)__
+* __[Homepage](N/A)__
+* __[Forums](N/A)__
+* __[Documentation](N/A)__
+* __[Plugin Repository](N/A)__
+* __[Jenkins](N/A)__
