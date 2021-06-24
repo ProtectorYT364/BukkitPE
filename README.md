@@ -1,4 +1,4 @@
-[![Download via Jenkins](https://bukkitpe.net/BukkitPE.png)](website link)
+[![Download via Jenkins](https://bukkitpe.net/BukkitPE.png)]()
 
 
 # What is this?
@@ -30,3 +30,14 @@ Currently, we don't have any forums for now.
 * __[Documentation](N/A)__
 * __[Plugin Repository](N/A)__
 * __[Jenkins](N/A)__
+
+## TODO
+
+* __[Fix World Generation]__
+* __[Add 1.17 Items and Block]__
+* __[Make More Stable]__
+* __[Add New Mob]__
+* __[more optimise]__
+* __[Add Nether And End]__
+* __[Fix Spawn Area Because It Spawns always in water]
+* __[Fix Bow]
