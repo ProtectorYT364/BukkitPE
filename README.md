@@ -39,5 +39,5 @@ Currently, we don't have any forums for now.
 * __[Add New Mob]__
 * __[more optimise]__
 * __[Add Nether And End]__
-* __[Fix Spawn Area Because It Spawns always in water]
-* __[Fix Bow]
+* __[Fix Spawn Area Because It Spawns always in water]__
+* __[Fix Bow]__
