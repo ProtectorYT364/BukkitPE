@@ -1,3 +1,3 @@
 #!/bin/sh
 
-java -jar BukkitPE.jar
+java -jar BukkitPE-1.jar
