@@ -18,21 +18,33 @@ import java.util.*;
  * BukkitPE Project
  */
 public class SessionManager {
-    public final long serverId;
     protected final Packet.PacketFactory[] packetPool = new Packet.PacketFactory[256];
+
     protected final RakNetServer server;
+
     protected final UDPServerSocket socket;
-    protected final Map<String, Session> sessions = new HashMap<>();
-    protected final Map<String, Long> block = new HashMap<>();
-    protected final Map<String, Integer> ipSec = new HashMap<>();
-    public boolean portChecking = true;
+
     protected int receiveBytes = 0;
     protected int sendBytes = 0;
+
+    protected final Map<String, Session> sessions = new HashMap<>();
+
     protected String name = "";
+
     protected int packetLimit = 1000;
+
     protected boolean shutdown = false;
+
     protected long ticks = 0;
     protected long lastMeasure;
+
+    protected final Map<String, Long> block = new HashMap<>();
+    protected final Map<String, Integer> ipSec = new HashMap<>();
+
+    public boolean portChecking = true;
+
+    public final long serverId;
+
     protected String currentSource = "";
 
     public SessionManager(RakNetServer server, UDPServerSocket socket) throws Exception {
@@ -69,7 +81,7 @@ public class SessionManager {
                     }
                     --max;
                 } catch (Exception e) {
-                    if (!"".equals(currentSource)) {
+                    if (!currentSource.isEmpty()) {
                         this.blockAddress(currentSource);
                     }
                     // else ignore
@@ -131,26 +143,29 @@ public class SessionManager {
         DatagramPacket datagramPacket = this.socket.readPacket();
         if (datagramPacket != null) {
             // Check this early
-            String source = datagramPacket.sender().getHostString();
-            currentSource = source; //in order to block address
-            if (this.block.containsKey(source)) {
-                datagramPacket.release();
-                return true;
-            }
+            try {
+                String source = datagramPacket.sender().getHostString();
+                currentSource = source; //in order to block address
+                if (this.block.containsKey(source)) {
+                    return true;
+                }
 
-            if (this.ipSec.containsKey(source)) {
-                this.ipSec.put(source, this.ipSec.get(source) + 1);
-            } else {
-                this.ipSec.put(source, 1);
-            }
+                if (this.ipSec.containsKey(source)) {
+                    this.ipSec.put(source, this.ipSec.get(source) + 1);
+                } else {
+                    this.ipSec.put(source, 1);
+                }
 
-            ByteBuf byteBuf = datagramPacket.content();
-            byte[] buffer = new byte[byteBuf.readableBytes()];
-            byteBuf.readBytes(buffer);
-            datagramPacket.release();
-            int len = buffer.length;
-            int port = datagramPacket.sender().getPort();
-            if (len > 0) {
+                ByteBuf byteBuf = datagramPacket.content();
+                if (byteBuf.readableBytes() == 0) {
+                    // Exit early to process another packet
+                    return true;
+                }
+                byte[] buffer = new byte[byteBuf.readableBytes()];
+                byteBuf.readBytes(buffer);
+                int len = buffer.length;
+                int port = datagramPacket.sender().getPort();
+
                 this.receiveBytes += len;
 
                 byte pid = buffer[0];
@@ -180,8 +195,8 @@ public class SessionManager {
                 } else {
                     return false;
                 }
-            } else {
-                return true;
+            } finally {
+                datagramPacket.release();
             }
         }
 
@@ -367,6 +382,11 @@ public class SessionManager {
                     int timeout = Binary.readInt(Binary.subBytes(packet, offset, 4));
                     this.blockAddress(address, timeout);
                     break;
+                case RakNet.PACKET_UNBLOCK_ADDRESS:
+                    len = packet[offset++];
+                    address = new String(Binary.subBytes(packet, offset, len), StandardCharsets.UTF_8);
+                    this.unblockAddress(address);
+                    break;
                 case RakNet.PACKET_SHUTDOWN:
                     for (Session session : new ArrayList<>(this.sessions.values())) {
                         this.removeSession(session);
@@ -402,6 +422,10 @@ public class SessionManager {
         } else if (this.block.get(address) < finalTime) {
             this.block.put(address, finalTime);
         }
+    }
+
+    public void unblockAddress(String address) {
+        this.block.remove(address);
     }
 
     public Session getSession(String ip, int port) {
@@ -456,13 +480,7 @@ public class SessionManager {
 
     private void registerPackets() {
         // fill with dummy returning null
-        Arrays.fill(this.packetPool, new Packet.PacketFactory() {
-
-            @Override
-            public Packet create() {
-                return null;
-            }
-        });
+        Arrays.fill(this.packetPool, (Packet.PacketFactory) () -> null);
 
         //this.registerPacket(UNCONNECTED_PING.ID, UNCONNECTED_PING.class);
         this.registerPacket(UNCONNECTED_PING_OPEN_CONNECTIONS.ID, new UNCONNECTED_PING_OPEN_CONNECTIONS.Factory());
