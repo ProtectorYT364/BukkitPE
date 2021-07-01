@@ -5,7 +5,7 @@ do
  echo "Starting BukkitPE | Restarting"
  echo "--------------"
  
-java -jar BukkitPE.jar
+java -jar BukkitPE-1.jar
 
 sleep 5
 done
