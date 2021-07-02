@@ -204,10 +204,10 @@ public class Server {
         this.logger.info("Loading " + TextFormat.GREEN + "server properties" + TextFormat.WHITE + "...");
         this.properties = new Config(this.dataPath + "server.properties", Config.PROPERTIES, new ConfigSection() {
             {
-                put("motd", "§l§6Bukkit§bPE");
+                put("motd", "§l§6Bukkit§bPE§l§8-§l§2Updated");
                 put("server-port", 19132);
                 put("server-ip", "0.0.0.0");
-                put("view-distance", 12);
+                put("view-distance", 8);
                 put("white-list", false);
                 put("announce-player-achievements", true);
                 put("spawn-protection", 0);
@@ -223,8 +223,8 @@ public class Server {
                 put("generator-settings", "");
                 put("level-name", "world");
                 put("level-seed", "0");
-                put("level-type", "DEFAULT");
-                put("enable-query", false);
+                put("level-type", "FLAT");
+                put("enable-query", true);
                 put("enable-rcon", false);
                 put("rcon.password", Base64.getEncoder().encodeToString(UUID.randomUUID().toString().replace("-", "").getBytes()).substring(3, 13));
                 put("auto-save", true);
