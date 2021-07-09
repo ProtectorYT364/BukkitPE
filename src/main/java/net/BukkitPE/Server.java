@@ -207,11 +207,11 @@ public class Server {
                 put("motd", "§l§6Bukkit§bPE§l§8-§l§2Updated");
                 put("server-port", 19132);
                 put("server-ip", "0.0.0.0");
-                put("view-distance", 8);
+                put("view-distance", 12);
                 put("white-list", false);
                 put("announce-player-achievements", true);
-                put("spawn-protection", 0);
-                put("max-players", 10);
+                put("spawn-protection", 16);
+                put("max-players", 20);
                 put("allow-flight", false);
                 put("spawn-animals", true);
                 put("spawn-mobs", true);
@@ -223,7 +223,7 @@ public class Server {
                 put("generator-settings", "");
                 put("level-name", "world");
                 put("level-seed", "0");
-                put("level-type", "FLAT");
+                put("level-type", "flat");
                 put("enable-query", true);
                 put("enable-rcon", false);
                 put("rcon.password", Base64.getEncoder().encodeToString(UUID.randomUUID().toString().replace("-", "").getBytes()).substring(3, 13));
@@ -233,7 +233,7 @@ public class Server {
             }
         });
         if (this.getPropertyBoolean("online-mode", false)) {
-            this.logger.info(" **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!\nWhile this makes the game possible to play without internet access, it also \nopens up the ability for hackers to connect with any username they choose.");
+            this.logger.info(" **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!\nit also \nopens up the ability for hackers to connect with any username they choose.");
         }
         this.forceLanguage = (Boolean) this.getConfig("settings.force-language", false);
         this.baseLang = new BaseLang((String) this.getConfig("settings.language", BaseLang.FALLBACK_LANGUAGE));
