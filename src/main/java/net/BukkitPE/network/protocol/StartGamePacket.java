@@ -21,6 +21,7 @@ public class StartGamePacket extends DataPacket {
     public boolean b2;
     public boolean b3;
     public String unknownstr;
+    public static String server_engine;
 
     @Override
     public byte pid() {
@@ -50,6 +51,8 @@ public class StartGamePacket extends DataPacket {
         this.putBoolean(b2);
         this.putBoolean(b3);
         this.putString(unknownstr);
+        this.putBoolean(false);
+        this.putString(server_engine);
     }
 
 }
