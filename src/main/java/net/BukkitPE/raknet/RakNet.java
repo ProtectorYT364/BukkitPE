@@ -8,7 +8,7 @@ package net.BukkitPE.raknet;
 public abstract class RakNet {
 
     public static final String VERSION = "1.1.0";
-    public static final byte PROTOCOL = 10;
+    public static final byte PROTOCOL = 6;
     public static final byte[] MAGIC = new byte[]{
             (byte) 0x00, (byte) 0xff, (byte) 0xff, (byte) 0x00,
             (byte) 0xfe, (byte) 0xfe, (byte) 0xfe, (byte) 0xfe,
@@ -88,19 +88,12 @@ public abstract class RakNet {
     public static final byte PACKET_RAW = 0x08;
 
     /*
-     * BLOCK_ADDRESS payload:
+     * RAW payload:
      * byte (address length)
      * byte[] (address)
      * int (timeout)
      */
     public static final byte PACKET_BLOCK_ADDRESS = 0x09;
-
-    /*
-     * UNBLOCK_ADDRESS payload:
-     * byte (adress length)
-     * byte[] (address)
-     */
-    public static final byte PACKET_UNBLOCK_ADDRESS = 0x10;
 
     /*
      * No payload

@@ -7,7 +7,6 @@ package net.BukkitPE.network.protocol;
 public class ChangeDimensionPacket extends DataPacket {
 
     public static final byte NETWORK_ID = ProtocolInfo.CHANGE_DIMENSION_PACKET;
-    public static final byte PACKET_NAME = "CHANGE_DIMENSION_PACKET";
 
     public byte dimension;
 

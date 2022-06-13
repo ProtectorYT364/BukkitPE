@@ -22,6 +22,7 @@ public class UDPServerSocket extends ChannelInboundHandlerAdapter {
 
     protected final ThreadedLogger logger;
     protected Bootstrap bootstrap;
+    protected EventLoopGroup group;
     protected Channel channel;
 
     protected ConcurrentLinkedQueue<DatagramPacket> packets = new ConcurrentLinkedQueue<>();
@@ -37,38 +38,29 @@ public class UDPServerSocket extends ChannelInboundHandlerAdapter {
     public UDPServerSocket(ThreadedLogger logger, int port, String interfaz) {
         this.logger = logger;
         try {
-            if (Epoll.isAvailable()) {
-                bootstrap = new Bootstrap()
-                        .channel(EpollDatagramChannel.class)
-                        .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
-                        .handler(this)
-                        .group(new EpollEventLoopGroup());
-                this.logger.info("Epoll is available. EpollEventLoop will be used.");
-            } else {
-                bootstrap = new Bootstrap()
-                        .group(new NioEventLoopGroup())
-                        .channel(NioDatagramChannel.class)
-                        .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
-                        .handler(this);
-                this.logger.info("Epoll is unavailable. Reverting to NioEventLoop.");
-            }
+            bootstrap = new Bootstrap();
+            group = new NioEventLoopGroup();
+            bootstrap
+                    .group(group)
+                    .channel(NioDatagramChannel.class)
+                    .handler(this);
             channel = bootstrap.bind(interfaz, port).sync().channel();
-        } catch (Exception e) {
+        } catch (InterruptedException e) {
             this.logger.critical("**** FAILED TO BIND TO " + interfaz + ":" + port + "!");
-            this.logger.critical("Perhaps a server is already running on that port?");
+            this.logger.critical("-------------------------------------------------");
+            this.logger.critical("There may be another server running on that port!");
+            this.logger.critical("--------------------------------------------------");
             System.exit(1);
         }
     }
 
     public void close() {
-        bootstrap.config().group().shutdownGracefully();
-        if (channel != null) {
-            channel.close().syncUninterruptibly();
+        this.group.shutdownGracefully();
+        try {
+            this.channel.closeFuture().sync();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-    }
-
-    public void clearPacketQueue() {
-        this.packets.clear();
     }
 
     public DatagramPacket readPacket() throws IOException {
@@ -87,10 +79,5 @@ public class UDPServerSocket extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         this.packets.add((DatagramPacket) msg);
-    }
-
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        this.logger.warning(cause.getMessage(), cause);
     }
 }

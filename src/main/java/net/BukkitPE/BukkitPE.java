@@ -25,97 +25,64 @@ import net.BukkitPE.utils.ServerKiller;
 */
 public class BukkitPE {
 
-    public final static String VERSION = getVersion();
-    public final static String API_VERSION = "1.0.13";
-    public final static String CODENAME = "";
-    @Deprecated
-    public final static String MINECRAFT_VERSION = ProtocolInfo.MINECRAFT_VERSION;
-    @Deprecated
-    public final static String MINECRAFT_VERSION_NETWORK = ProtocolInfo.MINECRAFT_VERSION_NETWORK;
+    public final static String VERSION = "1.0dev";
+    public final static String API_VERSION = "1.0.0";
+    public final static String CODENAME = "SharpKnife";
 
     public final static String PATH = System.getProperty("user.dir") + "/";
     public final static String DATA_PATH = System.getProperty("user.dir") + "/";
     public final static String PLUGIN_PATH = DATA_PATH + "plugins";
     public static final long START_TIME = System.currentTimeMillis();
     public static boolean ANSI = true;
-    public static boolean TITLE = false;
-    public static boolean shortTitle = requiresShortTitle();
+    public static boolean shortTitle = false;
     public static int DEBUG = 1;
 
     public static void main(String[] args) {
-        // Force IPv4 since Nukkit is not compatible with IPv6
-        System.setProperty("java.net.preferIPv4Stack" , "true");
-        System.setProperty("log4j.skipJansi", "false");
-        System.getProperties().putIfAbsent("io.netty.allocator.type", "unpooled"); // Disable memory pooling unless specified
 
-        // Force Mapped ByteBuffers for LevelDB till fixed.
-        System.setProperty("leveldb.mmap", "true");
-
-        // Netty logger for debug info
-        InternalLoggerFactory.setDefaultFactory(Log4J2LoggerFactory.INSTANCE);
-        ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);
-
-        // Define args
-        OptionParser parser = new OptionParser();
-        parser.allowsUnrecognizedOptions();
-        OptionSpec<Void> helpSpec = parser.accepts("help", "Shows this page").forHelp();
-        OptionSpec<Void> ansiSpec = parser.accepts("disable-ansi", "Disables console coloring");
-        OptionSpec<Void> titleSpec = parser.accepts("enable-title", "Enables title at the top of the window");
-        OptionSpec<String> vSpec = parser.accepts("v", "Set verbosity of logging").withRequiredArg().ofType(String.class);
-        OptionSpec<String> verbositySpec = parser.accepts("verbosity", "Set verbosity of logging").withRequiredArg().ofType(String.class);
-        OptionSpec<String> languageSpec = parser.accepts("language", "Set a predefined language").withOptionalArg().ofType(String.class);
-
-        // Parse arguments
-        OptionSet options = parser.parse(args);
-
-        if (options.has(helpSpec)) {
-            try {
-                // Display help page
-                parser.printHelpOn(System.out);
-            } catch (IOException e) {
-                // ignore
-            }
-            return;
-        }
-
-        ANSI = !options.has(ansiSpec);
-        TITLE = options.has(titleSpec);
-
-        String verbosity = options.valueOf(vSpec);
-        if (verbosity == null) {
-            verbosity = options.valueOf(verbositySpec);
-        }
-        if (verbosity != null) {
-
-            try {
-                Level level = Level.valueOf(verbosity);
-                setLogLevel(level);
-            } catch (Exception e) {
-                // ignore
+        //Shorter title for windows 8/2012
+        String osName = System.getProperty("os.name").toLowerCase();
+        if (osName.contains("windows")) {
+            if (osName.contains("windows 8") || osName.contains("2012")) {
+                shortTitle = true;
             }
         }
 
-        String language = options.valueOf(languageSpec);
+        for (String arg : args) {
+            switch (arg) {
+                case "disable-ansi":
+                    ANSI = false;
+                    break;
+            }
+        }
+
+        MainLogger logger = new MainLogger(DATA_PATH + "server.log");
 
         try {
-            if (TITLE) {
-                System.out.print((char) 0x1b + "]0;BukkitPE is starting up..." + (char) 0x07);
+            if (ANSI) {
+                System.out.print(" \n____        _    _    _ _   _____  ______ ");
+                System.out.print(" \n|  _ \\      | |  | |  (_) | |  __ \\|  ____|");
+                System.out.print(" \n| |_) |_   _| | _| | ___| |_| |__) | |__   ");
+                System.out.print(" \n|  _ <| | | | |/ / |/ / | __|  ___/|  __|  ");
+                System.out.print(" \n| |_) | |_| |   <|   <| | |_| |    | |____ ");
+                System.out.print(" \n|____// \\__,_|_|\\_\\_|\\_\\_|\\__|_|    |______|");
+                System.out.print(" \n*                                           ");
+                System.out.print(" \n* Starting......                            ");
             }
-            new Server(PATH, DATA_PATH, PLUGIN_PATH, language);
-        } catch (Throwable t) {
-            log.throwing(t);
+            Server server = new Server(logger, PATH, DATA_PATH, PLUGIN_PATH);
+        } catch (Exception e) {
+            logger.logException(e);
         }
 
-        if (TITLE) {
-            System.out.print((char) 0x1b + "]0;Stopping Server..." + (char) 0x07);
+        if (ANSI) {
+            System.out.print((char) 0x1b + "]0;Stopping BukkitPE....." + (char) 0x07);
         }
-        log.info("Stopping other threads");
+        logger.info("Stopping other threads");
 
         for (Thread thread : java.lang.Thread.getAllStackTraces().keySet()) {
             if (!(thread instanceof InterruptibleThread)) {
                 continue;
             }
-            log.debug("Stopping {} thread", thread.getClass().getSimpleName());
+            logger.debug("Stopping " + thread.getClass().getSimpleName() + " thread");
             if (thread.isAlive()) {
                 thread.interrupt();
             }
@@ -124,8 +91,12 @@ public class BukkitPE {
         ServerKiller killer = new ServerKiller(8);
         killer.start();
 
-        if (TITLE) {
-            System.out.print((char) 0x1b + "]0;Server Stopped" + (char) 0x07);
+        logger.shutdown();
+        logger.interrupt();
+        CommandReader.getInstance().removePromptLine();
+
+        if (ANSI) {
+            System.out.print((char) 0x1b + "]0;The server has stopped!" + (char) 0x07);
         }
         System.exit(0);
     }

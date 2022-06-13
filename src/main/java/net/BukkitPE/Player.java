@@ -1708,7 +1708,6 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
         startGamePacket.b2 = true;
         startGamePacket.b3 = false;
         startGamePacket.unknownstr = "";
-        startGamePacket.server_engine = "BukkitPE";
         this.dataPacket(startGamePacket);
 
         SetTimePacket setTimePacket = new SetTimePacket();
